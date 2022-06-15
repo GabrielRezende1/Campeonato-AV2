@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="https://glitch.com/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>{{seo.title}}</title>
+
+  <!-- Meta tags for SEO and social sharing -->
+  <link rel="canonical" href="{{seo.url}}">
+  <meta name="description" content="{{seo.description}}">
+  <meta property="og:title" content="{{seo.title}}">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="{{seo.url}}">
+  <meta property="og:description" content="{{seo.description}}">
+  <meta property="og:image" content="{{seo.image}}">
+  <meta name="twitter:card" content="summary">
+
+  <!-- Import the webpage's stylesheet -->
+  <link rel="stylesheet" href="/style.css" />
+
+  <!-- Show choice chart on poll submission -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="text/javascript">
+    // O gráfico utiliza chart.js (https://www.chartjs.org/docs/3.0.2/charts/doughnut.html)
+    function showChart(linguagens, numVotos) {
+      
+      // Recupera o elemento onde o gráfico será renderizado
+      var ctx = document.getElementById('myChart');
+      
+      // Setup das cores
+      var colors = ["#05DA84", "#E6E656", "#E5AED6", "#750E16"];
+      var border = "#ffffff";
+      
+      // Verificando se temos votos. Se não, mostra um gráfico vazio
+      if(numVotos.reduce((a, b) => a + b, 0) <1) {
+        picks = ["1e-10"]; // Usando um valor próximo a zero para o apresentação
+        linguagens = ["Sem Votos!"];
+        colors = ["#00000000"];
+        border = ["#000000"];
+      }
+      // Construindo o gráfico na página
+      var myLineChart = new Chart(ctx, {
+        type: "doughnut",
+        data: {
+          labels: linguagens,
+          datasets: [{
+            data: numVotos,
+            backgroundColor: colors,
+            borderColor: border,
+            fill: true,
+            hoverOffset: 12,
+            cutout: "60%"
+          }]
+        },
+        options: {
+          plugins: {
+            legend: {
+              display: true,
+              position: "bottom",
+              labels: {
+                padding: 24
+              }
+            }
+          },
+          layout: {
+            padding: 24
+          }
+        }
+      });
+    }
+  </script>
+
+</head>
+
+<body>
+  <!-- Uso do Partial cabecalho -->
+  {{>cabecalho}}
+  <div class="wrapper">
+    <div class="content" role="main">
+      <p>
+        Uma urna desenvolvida com (https://cdn.jsdelivr.net/npm/chart.js) e suportado pelo Node.js com um banco de dados {{seo.db}}.
+      </p>
+{{#if error}}
+      <p class="error">
+        {{error}}
+      </p>
+
+{{else}}
+      <!-- O servidor retorna a flag verResultados quando o usuário submeteu uma resposta e, assim, mostramos os resultados -->
+  {{#if verResultados}}
+      <h2>
+        Resultados
+      </h2>
+      <div class="poll-results">
+        <p>
+          Submissões enviadas (veja a página <a href="/votos">Admin</a> page para ver os votos):
+        </p>
+        <p>
+          <canvas id="myChart"></canvas>
+          <script type="text/javascript">
+            //Uso dos HELPERS nomes e totais
+            showChart("{{{nomes linguagens}}}".split(","), "{{{totais linguagens}}}".split(","));
+          </script>
+        </p>
+      </div>
+  {{else}}
+        <!-- If the user hasn't already made a choice we show the poll -->
+      <h2>
+        Urna
+      </h2>
+      <div class="poll-form">
+        <p>
+          Qual das linguagens abaixo você mais gosta de codificar? 
+        </p>
+        <!-- Envia para o servidor via POST quando o usuário submete uma opção -->
+        <form method="post" action="/escalacao">
+          <!-- O servidor retorna a lista de linguagens presentes na votação -->
+    {{#each linguagens}}
+          <input type="radio" id="{{this.nome}}" name="idCampeonato" value="{{this.id}}" required />
+          <label for="{{this.nome}}">{{this.nome}}</label>
+    {{/each}}
+          <br/><br/>
+          <button type="submit">
+            Submit
+          </button>
+        </form>        
+      </div>
+  {{/if}}
+{{/if}}
+
+      <!-- Instruções para o projeto -->
+      <div class="instructions">
+        <h2>
+          Como usar este projeto
+        </h2>
+        <p>
+          This is the Glitch <strong>Hello {{seo.db}}</strong> project. You can use it to build your own app. Check out README.md in the editor for more info and next steps you can take!
+        </p>
+      </div>
+
+    </div>
+  </div>
+  <!-- Uso do Partial rodape se for na conta do Admin -->
+  {{#if rodapeAdmin}}
+    {{>rodape}}
+  {{/if}}
+  
+</body>
+
+</html>

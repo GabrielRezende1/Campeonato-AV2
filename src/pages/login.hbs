@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="https://glitch.com/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Login de Usuário</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+
+<body>
+  <div class="wrapper">
+    <div class="content" role="main">
+      {{>cabecalho}}
+      <h1>Efetuar Login</h1>
+{{#if error}}
+      <p class="error">
+        {{error}}
+      </p>
+{{/if}}
+      <!-- O usuário pode limpar a lista de votos se ele primeiramente determinar a ADMIN_KEY presente no .env-->
+      <form action="/" method="post">
+        <h3>
+          Efetue seu login
+        </h3>
+        <label for="conta">Conta: </label><input type="text" id="conta" name="conta" required><br/>
+        <label for="senha">Senha: </label><input type="password" id="senha" name="senha" required><br/>
+        <button type="submit">Submeter</button>
+      </form>
+    </div>
+  </div>
+</body>
+
+</html>

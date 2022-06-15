@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="https://glitch.com/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Alô SQLite: Log dos Votos</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+
+<body>
+  <div class="wrapper">
+    <div class="content" role="main">
+      {{>cabecalho}}
+      <h1>Votos</h1>
+      {{#if error}}
+      <p class="error">
+        {{error}}
+      </p>
+      {{else}}
+
+      <!-- O script do servidor irá retornar os votos no array  -->
+      <p>
+        Cada vez que você submete um voto na <a href="/">Home Page</a>, a aplicação irá também adicionar um log. <em>Apresentando os registros mais recentes (max 30).</em>
+      </p>
+      <!-- Write out a table row for each entry in the log array showing choice and timestamp -->
+      {{#if votos.length}}
+          <div>
+            <h2>Histórico da Votação</h2>
+            <table>
+              <tr>
+                <th>Linguagem</th>
+                <th>Hora</th>
+              </tr>
+              {{#each votos}}
+                <tr>
+                  <td>{{nome}}</td>
+                  <td>{{hora}}</td>
+                </tr>
+              {{/each}}
+            </table>
+          </div>
+      {{else}}
+      <p class="error">
+        Sem registros!
+      </p>
+      {{/if}}
+
+      <!-- O usuário pode limpar a lista de votos se ele primeiramente determinar a ADMIN_KEY presente no .env-->
+      <form action="/reset" method="post">
+        <h2>
+          Limpando o histórico da votação
+        </h2>
+        <p>
+          Limpe o histórico de votação somente se você estiver absolutamente seguro disso, pois
+          esta ação não poderá ser desfeita.
+          <em>(Leita o README para instruções na configuração da ADMIN_KEY.)</em>
+        </p>
+        <p>
+          Entre com a ADMIN_KEY para confirmar:
+        </p>
+        
+        <!-- O Servidor retorna a flag falha se a chave submetida não estiver correta -->
+        {{#if falha}}
+        <p class="error">
+          {{falha}}
+        </p>
+        {{/if}}
+        <input type="password" id="pass" name="key" required>
+        <button type="submit">Limpar Votos</button>
+      </form>
+      {{/if}}
+    </div>
+  </div>
+  {{>rodape}}
+</body>
+
+</html>
