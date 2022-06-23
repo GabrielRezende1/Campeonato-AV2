@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="https://glitch.com/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Alô SQLite: {{operacao}} Linguagem</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+
+<body>
+  <div class="wrapper">
+    <div class="content" role="main">
+      {{>cabecalho}}
+      <h1>{{operacao}}Campeonato</h1>
+{{#if error}}
+      <p class="error">
+        {{error}}
+      </p>
+{{else}}
+      <!-- O usuário pode limpar a lista de votos se ele primeiramente determinar a ADMIN_KEY presente no .env-->
+      <form action="{{funcao}}" method="post">
+        <h3>
+          {{operacao}} Novo Campeonato
+        </h3>
+        <input type="text" id="nome" name="nome" required>
+        <button type="submit">{{operacao}}</button>
+      </form>
+{{/if}}
+    </div>
+  </div>
+  
+  {{#if rodapeAdmin}}
+    {{>rodapeAdmin}}
+  {{/if}}
+  
+</body>
+
+</html>

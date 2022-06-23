@@ -1,14 +1,6 @@
-/******************************************************************************
-START Glitch hello-app default styles
-
-The styles in this section do some minimal CSS resets, set default fonts and 
-colors, and handle the layout for our footer and "Remix on Glitch" button. If
-you're new to CSS they may seem a little complicated, but you can scroll down
-to this section's matching END comment to see page-specific styles.
-******************************************************************************/
 /* Our default values set as CSS variables */
 :root {
-  --color-bg: #FFE6F8;
+  --color-bg: #2600c1;
   --color-text-main: #000000;
   --color-primary: #D7F5EF;
   --wrapper-height: 87vh;
@@ -67,12 +59,11 @@ to this section's matching END comment to see page-specific styles.
 
 /* Navigation grid */
 header {
-  display: flex;
   text-align: center;
   margin: 1rem auto 0;
   padding: 1rem 0 0.75rem 0;
   width: 100%;
-  border-bottom: 4px solid #fff;
+  border-bottom: 4px solid black;
 }
 
 /* Navigation grid */
@@ -127,9 +118,9 @@ body {
 .content {
   display: flex;
   flex-direction: column;
-  align-items: left;
+  align-items: center;
   justify-content: left;
-  max-width: 600px;
+  max-width: 1000px;
 }
 
 p,
@@ -137,9 +128,10 @@ label {
   font-size: 1.25rem;
 }
 
+
 /* Title h1 style */
 h1 {
-  color: #2800FF;
+  color: white;
   font-family: HK Grotesk;
   font-style: normal;
   font-weight: bold;
@@ -162,15 +154,18 @@ h1 {
 /* Styles for our poll form and its results */
 .poll-form,
 .poll-results {
-  background-color: #FFF3FC;
-  padding: 0 16px 16px 16px;
+  background-color: black;
+  padding: 16px 16px 16px 16px;
   border-radius: 8px;
+  color: white;
+  align-items: center;
 }
 .poll-form button:hover {
   cursor: pointer;
-  box-shadow: -8px 4px 20px var(--color-primary);
+  background-color: purple;
+  border-bottom: 3px solid darkblue;
+  
 }
-button,
 input {
   font-family: inherit;
   font-size: 100%;
@@ -179,13 +174,42 @@ input {
   box-sizing: border-box;
   border-radius: 4px;
   padding: 0.5rem 1rem;
+  background-color: rgb(50, 50, 50);
+  color: white;
+  margin: 5px;
+}
+input[type=radio]{
+  display: none;
+}
+input:checked + label{
+  color: black;
+  background-color: white;
+  margin: 10px;
 }
 button {
+  font-family: inherit;
   cursor: pointer;
+  padding: 20px;
+  font-size: 16px;
+  line-height: 1px;
+  height: 20px;
+  align-items: center;
+  background: darkblue;
+  border: 0px;
+  border-bottom: 3px solid purple;
+  border-radius: 10px;
+  text-decoration: none;
+  color: white;
+  text-transform: uppercase;
+  
 }
 label {
-  color: #000000;
+  color: white;
   font-weight: bold;
+  border-radius: 50%;
+  border-left: 10px solid blue;
+  border-right: 10px solid purple;
+  padding: 5px;
 }
 
 /* Instructions */
@@ -196,7 +220,7 @@ label {
   font-size: 1rem;
 }
 h2 {
-  color: #2800FF;
+  color: white;
 }
 
 /* Admin page */

@@ -1,7 +1,5 @@
 'use strict'
 
-const dotenv = require("dotenv");
-
 // Para especificações de path 
 const path = require("path");
  
@@ -23,7 +21,7 @@ servidor.register(require("fastify-formbody"));
 
 // Configurando o Fastify para usar cookies
 servidor.register(require('fastify-cookie'), {
-  secret: ["admin", "comum"],     // for cookies signature
+  secret: ["admin", "usuario"],     // for cookies signature
   parseOptions: {}      // options for parsing cookies
 });
 
@@ -34,16 +32,6 @@ servidor.register(require("point-of-view"), {
     handlebars: hbs
   }
 });
-
-//
-// Criando Helpers (TAGS) que possam ser utilizados nas páginas
-//
-let nomesHelpers = process.env.HELPERS.split(","); 
-console.log(nomesHelpers);
-for(let i = 0; i < nomesHelpers.length; i++) {
-  let helper = require("./src/helpers/" + nomesHelpers[i] + ".js");
-  helper.configurar(hbs);
-}
 
 //
 // Carga dinâmica dos partials do meu sistema
@@ -78,6 +66,7 @@ servidor.usuariosAtivos = [];
 servidor.listen(process.env.PORT, '0.0.0.0', function(err, address) {
   if (err) {
     servidor.log.error(err);
+    console.log("Erro no listen do server.js");
     process.exit(1);
   }
   console.log(`A aplicação está ouvindo em ${address}`);

@@ -21,16 +21,19 @@
       </p>
 {{/if}}
       <!-- O usuário pode limpar a lista de votos se ele primeiramente determinar a ADMIN_KEY presente no .env-->
+      <div class="poll-form">
       <form action="/" method="post">
-        <h3>
-          Efetue seu login
-        </h3>
         <label for="conta">Conta: </label><input type="text" id="conta" name="conta" required><br/>
         <label for="senha">Senha: </label><input type="password" id="senha" name="senha" required><br/>
         <button type="submit">Submeter</button>
       </form>
-    </div>
-  </div>
+      </div><!--poll-form-->
+      
+      <h3>
+        Senha `admin` para alterações | Senha `usuario` para consultas
+      </h3>
+    </div><!--content-->
+  </div><!--wrapper-->
 </body>
 
 </html>

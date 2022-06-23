@@ -12,7 +12,7 @@ module.exports = {
     servidor.get("/escalacao", module.exports.apresentarFormulario);
 
     // Apresenta o resultado da votação caso o path seja / e a requisição seja post
-    servidor.post("/escalacao", module.exports.processarTime);
+    servidor.post("/escalacao", module.exports.incluirTime);
   },
   apresentarFormulario: async (request, reply) => {
     // Se a requisição NÃO veio com o parâmetro 'raw', vamos repassar o objeto SEO
@@ -22,8 +22,8 @@ module.exports = {
     // Verificando se ocorreu a autenticação
     let conta = request.cookies.conta;
     let senha = request.cookies.senha;
-    console.log("--->" + JSON.stringify(request.cookies));
-    if(conta == null || conta == undefined || senha == "comum") {
+    console.log("IncluirTime.js =>" + JSON.stringify(request.cookies));
+    if(conta == null || conta == undefined || senha == 'usuario') {
       params.error = "* Usuário não autenticado!";
       reply.view("/src/pages/login.hbs", params);
       return;
@@ -31,6 +31,16 @@ module.exports = {
     
     ///### servidor.usuariosAtivos[conta] = { ultimaChamada : new Date()};
     console.log(servidor.usuariosAtivos);
+    
+    if(senha == 'admin') {
+      console.log("RODAPE ADMIN ATIVO");
+      params.rodapeUsuario = false;
+      params.rodapeAdmin = true;
+    }else if(senha == 'usuario') {
+      console.log("RODAPE USUARIO ATIVO");
+      params.rodapeAdmin = false;
+      params.rodapeUsuario = true;
+    }
 
     // Recuperando os times do banco de dados.
     // Montamos uma lista com os campeonatos e com os times obtidos
@@ -50,7 +60,7 @@ module.exports = {
       : reply.view("/src/pages/index.hbs", params);
   },
 
-  processarTime: async (request, reply) => {
+  incluirTime: async (request, reply) => {
     // Se a requisição NÃO veio com o parâmetro 'raw', vamos repassar o objeto SEO
     // (Search Engine Optimization) que coloca dados nas tags META do arquivo hbs
     let params = request.query.raw ? {} : { seo: seo };
@@ -62,19 +72,14 @@ module.exports = {
       reply.view("/src/pages/login.hbs", params);
       return;
     }
-    // Verificando se o usuário está na lista do servidor
-    let usuario = servidor.usuariosAtivos[conta];
-    if(usuario == null || usuario == undefined) {
-      params.error = "Usuário com sessão ativa!";
-      reply.view("/src/pages/login.hbs", params);
-      return;
-    }
+
     
     // Adicionando voto à linguagem indicada
-    await db.processarTime(request.body.idCampeonato);
+    await db.incluirTime(request.body.idCampeonato, request.body.nomeTime, request.body.vitoriasTime, request.body.derrotasTime);
     
-    const ctrlConsultarTime = require("./CtrlConsultarTime.js");
-    await ctrlConsultarTime.apresentarResultados(request,reply);
+    console.log("Novo time incluído");
+    const ctrlConsultarCampeonato = require("./CtrlConsultarCampeonato.js");
+    await ctrlConsultarCampeonato.apresentarFormulario(request,reply);
 
   },
 

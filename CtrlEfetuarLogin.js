@@ -36,7 +36,7 @@ module.exports = {
       params.error = "Conta Inválida!";
     else if(senha == null || senha.length == 0)    
       params.error = "A senha não pode ser nula!";
-    else if(senha !== ("admin" || "comum")) // A senha deve ser "admin"    
+    else if(senha !== "admin" && senha !== "usuario")
       params.error = "Senha Inválida";
 
     // Se algum erro foi definido, mando de novo para a página com o formulário
@@ -51,8 +51,8 @@ module.exports = {
     servidor.usuariosAtivos[agora] = { conta: conta, ultimaChamada : agora };
 
     if(senha == "admin") {
-      reply.setCookie('Admin', agora, {
-        domain: 'lpw-campeonato.glitch.me',
+      reply.setCookie('conta', 'admin', {
+        domain: 'lpw-campeonato2.glitch.me',
         path: '/',
         maxAge: 60 * 20, // 20 minutos
         secure: true,
@@ -60,13 +60,14 @@ module.exports = {
         httpOnly: true
       });
       
-      request.cookies.conta = agora;
+      request.cookies.conta = 'admin';
+      request.cookies.senha = 'admin';
       
       const ctrlIncluirTime = require("./CtrlIncluirTime.js");
       await ctrlIncluirTime.apresentarFormulario(request,reply);
-    }else if (senha == "comum") {
-      reply.setCookie('Comum', agora, {
-        domain: 'lpw-campeonato.glitch.me',
+    }else if (senha == "usuario") {
+      reply.setCookie('conta', 'usuario', {
+        domain: 'lpw-campeonato2.glitch.me',
         path: '/',
         maxAge: 60 * 20, // 20 minutos
         secure: true,
@@ -74,12 +75,12 @@ module.exports = {
         httpOnly: true
       });
       
-      request.cookies.conta = agora;
+      request.cookies.conta = 'usuario';
+      request.cookies.senha = 'usuario';
       
-      const ctrlConsultarTime = require("./CtrlConsultarTime.js");
-      await ctrlConsultarTime.apresentarResultados(request,reply);
+      const ctrlConsultarCampeonato = require("./CtrlConsultarCampeonato.js");
+      await ctrlConsultarCampeonato.apresentarFormulario(request,reply);
     }
-    
 
   }
 

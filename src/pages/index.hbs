@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
   <meta charset="utf-8" />
@@ -20,59 +20,6 @@
 
   <!-- Import the webpage's stylesheet -->
   <link rel="stylesheet" href="/style.css" />
-
-  <!-- Show choice chart on poll submission -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script type="text/javascript">
-    // O gráfico utiliza chart.js (https://www.chartjs.org/docs/3.0.2/charts/doughnut.html)
-    function showChart(linguagens, numVotos) {
-      
-      // Recupera o elemento onde o gráfico será renderizado
-      var ctx = document.getElementById('myChart');
-      
-      // Setup das cores
-      var colors = ["#05DA84", "#E6E656", "#E5AED6", "#750E16"];
-      var border = "#ffffff";
-      
-      // Verificando se temos votos. Se não, mostra um gráfico vazio
-      if(numVotos.reduce((a, b) => a + b, 0) <1) {
-        picks = ["1e-10"]; // Usando um valor próximo a zero para o apresentação
-        linguagens = ["Sem Votos!"];
-        colors = ["#00000000"];
-        border = ["#000000"];
-      }
-      // Construindo o gráfico na página
-      var myLineChart = new Chart(ctx, {
-        type: "doughnut",
-        data: {
-          labels: linguagens,
-          datasets: [{
-            data: numVotos,
-            backgroundColor: colors,
-            borderColor: border,
-            fill: true,
-            hoverOffset: 12,
-            cutout: "60%"
-          }]
-        },
-        options: {
-          plugins: {
-            legend: {
-              display: true,
-              position: "bottom",
-              labels: {
-                padding: 24
-              }
-            }
-          },
-          layout: {
-            padding: 24
-          }
-        }
-      });
-    }
-  </script>
-
 </head>
 
 <body>
@@ -81,55 +28,85 @@
   <div class="wrapper">
     <div class="content" role="main">
       <p>
-        Uma urna desenvolvida com (https://cdn.jsdelivr.net/npm/chart.js) e suportado pelo Node.js com um banco de dados {{seo.db}}.
+        Uma mini-campeonato desenvolvido e suportado pelo Node.js com um banco de dados {{seo.db}}.
       </p>
-{{#if error}}
+  {{#if error}} 
       <p class="error">
         {{error}}
       </p>
 
-{{else}}
-      <!-- O servidor retorna a flag verResultados quando o usuário submeteu uma resposta e, assim, mostramos os resultados -->
-  {{#if verResultados}}
-      <h2>
-        Resultados
-      </h2>
-      <div class="poll-results">
-        <p>
-          Submissões enviadas (veja a página <a href="/votos">Admin</a> page para ver os votos):
-        </p>
-        <p>
-          <canvas id="myChart"></canvas>
-          <script type="text/javascript">
-            //Uso dos HELPERS nomes e totais
-            showChart("{{{nomes linguagens}}}".split(","), "{{{totais linguagens}}}".split(","));
-          </script>
-        </p>
-      </div>
   {{else}}
-        <!-- If the user hasn't already made a choice we show the poll -->
+      <!-- O servidor retorna a flag verCampeonatos quando o usuário submeteu uma resposta e, assim, mostramos os resultados -->
+  {{#if verCampeonatos}} <!-- CtrlConsultarCampeonato -->
       <h2>
-        Urna
+        Campeonatos
       </h2>
       <div class="poll-form">
         <p>
-          Qual das linguagens abaixo você mais gosta de codificar? 
+          Escolha um campeonato para ver os times:
+        </p>
+        <form method="post" action="/campeonatos">
+          {{#each campeonatos}}
+          <input type="radio" id="{{this.nome}}" name="idCampeonato" value="{{this.id}}" required />
+          <label for="{{this.nome}}">{{this.nome}}</label> <br/><br/>
+          {{/each}}
+          
+          <button type="submit">
+            Submeter
+          </button>
+        </form>
+      </div><!--poll-form-->
+  {{else}} 
+  
+  {{#if verTimes}} <!-- CtrlConsultarTime -->
+      
+      <h2>
+        Times de {{#each campeonato}} {{this.nome}} {{/each}}
+      </h2>
+      
+      
+      <div class="poll-form">
+        {{#each times}}
+        <label for="{{this.nome}}">{{this.nome}}</label> |
+        <label for="{{this.vitorias}}">V: {{this.vitorias}}</label> |
+        <label for="{{this.derrotas}}">D: {{this.derrotas}}</label> |
+        <label for="{{this.dataInclusao}}">{{this.dataInclusao}}</label> 
+        <br/><br/>
+        {{/each}}
+      </div><!--poll-form-->
+      
+      
+  {{else}} <!-- CtrlIncluirTime.js -->
+        
+      <h2>
+        Cadastro de Time
+      </h2>
+      <div class="poll-form">
+        <p>
+          Preencha os dados do time e informe em qual Campeonato ele irá participar
         </p>
         <!-- Envia para o servidor via POST quando o usuário submete uma opção -->
         <form method="post" action="/escalacao">
-          <!-- O servidor retorna a lista de linguagens presentes na votação -->
-    {{#each linguagens}}
-          <input type="radio" id="{{this.nome}}" name="idCampeonato" value="{{this.id}}" required />
-          <label for="{{this.nome}}">{{this.nome}}</label>
-    {{/each}}
+          <label for="{{times.nome}}">Nome do Time:</label>
+          <input type="text" id="{{times.nome}}" name="nomeTime" required> <br/>
+          <label for="{{times.nome}}">Vitórias Globalmente:</label>
+          <input type="number" id="{{times.vitorias}}" name="vitoriasTime" required> <br/>
+          <label for="{{times.nome}}">Derrotas Globalmente:</label>
+          <input type="number" id="{{times.derrotas}}" name="derrotasTime" required> <br/>
+          <!-- O servidor retorna a lista de campeonatos presentes na votação -->
+          {{#each campeonatos}}
+            <input type="radio" id="{{this.nome}}" name="idCampeonato" value="{{this.id}}" required />
+            <label for="{{this.nome}}">{{this.nome}}</label>
+          {{/each}}
           <br/><br/>
           <button type="submit">
-            Submit
+            Submeter
           </button>
         </form>        
-      </div>
+      </div><!--poll-form-->
   {{/if}}
-{{/if}}
+  {{/if}}
+  {{/if}}
 
       <!-- Instruções para o projeto -->
       <div class="instructions">
@@ -141,12 +118,16 @@
         </p>
       </div>
 
-    </div>
-  </div>
+    </div><!--content-->
+  </div><!--wrapper-->
   <!-- Uso do Partial rodape se for na conta do Admin -->
   {{#if rodapeAdmin}}
-    {{>rodape}}
+    {{>rodapeAdmin}}
   {{/if}}
+
+  {{#if rodapeUsuario}}
+    {{>rodapeUsuario}}
+  {{/if}} 
   
 </body>
 
