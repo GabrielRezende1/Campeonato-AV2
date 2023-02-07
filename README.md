@@ -5,5 +5,5 @@ IMPORTANTE: Para que o app funcione, você deve acessá-lo em: https://lpw-campe
 
 O app se encontra em: https://glitch.com/@GabrielRezende1
 
-Projeto de Login + CRUD simulando um Campeonato de jogos feito ao longo das aulas de Linguagem de Programação Web na FAETERJ-PARACAMBI
+Projeto de Login + CRUD seguindo o modelo MVC (Model-View-Controller) simulando um Campeonato de jogos feito ao longo das aulas de Linguagem de Programação Web na FAETERJ-PARACAMBI
 Fastify foi o framework utilizado para tratamento do Servidor
